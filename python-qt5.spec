@@ -11,7 +11,7 @@
 
 Name:           python-qt5
 Version:        5.11.2
-Release:        6
+Release:        7
 Summary:        PyQt5 is a set of Python bindings for Qt5
 License:        GPLv3
 Url:            http://www.riverbankcomputing.com/software/pyqt/
@@ -19,7 +19,7 @@ Url:            http://www.riverbankcomputing.com/software/pyqt/
 %if 0%{?snap:1}
 Source0:        http://www.riverbankcomputing.com/static/Downloads/PyQt5/PyQt5_gpl-%{version}%{?snap:.%{snap}}.tar.gz
 %else
-Source0:        http://downloads.sourceforge.net/project/pyqt/PyQt5/PyQt-%{version}/PyQt5_gpl-%{version}.tar.gz
+Source0:        https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-%{version}/PyQt5_gpl-%{version}.tar.gz/download?use_mirror=netactuate#/PyQt5_gpl-%{version}.tar.gz
 %endif
 Source1:        macros.pyqt5
 Source2:        pylupdate5.sh
@@ -380,5 +380,8 @@ popd
 %dir %{_qt5_datadir}/qsci/api/python/
 
 %changelog
+* Tue Sep 15 2020 Ge Wang <wangge20@huawei.com> - 5.11.2-7
+- Modify Source0 Url
+
 * Wed Feb 12 2020 Jiangping Hu <hujp1985@foxmail.com> - 5.11.2-6
 - Package init
