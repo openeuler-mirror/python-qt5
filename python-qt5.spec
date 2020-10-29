@@ -1,17 +1,15 @@
 %global python3_dbus_dir %(%{__python3} -c "import dbus.mainloop; print(dbus.mainloop.__path__[0])" 2>/dev/null || echo "%{python3_sitearch}/dbus/mainloop")
-%global python2_dbus_dir %(%{__python2} -c "import dbus.mainloop; print(dbus.mainloop.__path__[0])" 2>/dev/null || echo "%{python2_sitearch}/dbus/mainloop")
 %ifarch %{?qt5_qtwebengine_arches}%{?!qt5_qtwebengine_arches:%{ix86} x86_64 %{arm} aarch64 mips mipsel mips64el}
 %global webengine 1
 %endif
 %global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 %global py3_sipdir %{_datadir}/sip/PyQt5
 %undefine _strict_symbol_defs_build
-%global py2_site_qt5 %{python2_sitearch}/PyQt5
 %global py3_site_qt5 %{python3_sitearch}/PyQt5
 
 Name:           python-qt5
 Version:        5.11.2
-Release:        7
+Release:        8
 Summary:        PyQt5 is a set of Python bindings for Qt5
 License:        GPLv3
 Url:            http://www.riverbankcomputing.com/software/pyqt/
@@ -31,11 +29,10 @@ Patch1:         PyQt5_gpl-5.11.2-sip_check.patch
 
 BuildRequires:  chrpath findutils dbus-devel dbus-python-devel phonon-qt5-devel qt5-qttools-devel
 BuildRequires:  qt5-qtbase-devel >= 5.5 qt5-qtenginio-devel qt5-qtconnectivity-devel  
-BuildRequires:  qt5-qtlocation-devel qt5-qtmultimedia-devel qt5-qtdeclarative-devel python2-enum34
-BuildRequires:  qt5-qtsensors-devel qt5-qtserialport-devel qt5-qtx11extras-devel python2-devel
+BuildRequires:  qt5-qtlocation-devel qt5-qtmultimedia-devel qt5-qtdeclarative-devel
+BuildRequires:  qt5-qtsensors-devel qt5-qtserialport-devel qt5-qtx11extras-devel
 BuildRequires:  qt5-qtxmlpatterns-devel qt5-qtwebchannel-devel qt5-qtwebsockets-devel 
-BuildRequires:  pulseaudio-devel python2 dbus-python qt5-qtsvg-devel qt5-qtscript-devel
-BuildRequires:  python2-sip-devel >= 4.19.12 python2-pyqt5-sip >= 4.19.12
+BuildRequires:  pulseaudio-devel dbus-python qt5-qtsvg-devel qt5-qtscript-devel
 BuildRequires:  python%{python3_pkgversion}-devel python%{python3_pkgversion} 
 BuildRequires:  python%{python3_pkgversion}-enum34 python%{python3_pkgversion}-pyqt5-sip >= 4.19.12
 BuildRequires:  python%{python3_pkgversion}-dbus python%{python3_pkgversion}-sip-devel >= 4.19.12
@@ -47,42 +44,10 @@ all platforms supported by Qt including Windows, OS X, Linux, iOS and Android. P
 
 %global __provides_exclude_from ^(%{_qt5_plugindir}/.*\\.so)$
 
-%package -n python2-qt5
-Summary:        Python v2 bindings for Qt5
-BuildRequires:  qt5-qtbase-private-devel
-Requires:       python2-qt5-base%{?_isa} = %{version}-%{release} python2-enum34
-Provides:       PyQt5 = %{version}-%{release} PyQt5%{?_isa} = %{version}-%{release}
-Provides:       python2-PyQt5 = %{version}-%{release} python2-PyQt5%{?_isa} = %{version}-%{release}
-%{?python_provide:%python_provide python2-qt5}
-
-%description -n python2-qt5
-Python v2 bindings for Qt5.
-
-%package -n python2-qt5-base
-Summary:        Python v2 bindings for Qt5 base
-Requires:       %{name}-rpm-macros = %{version}-%{release}
-%{?_qt5:Requires: %{_qt5}%{?_isa} = %{_qt5_version}}
-%{?_sip_api:Requires: python2-pyqt5-sip-api(%{_sip_api_major}) >= %{_sip_api}}
-Requires:       dbus-python
-Provides:       python2-PyQt5-base = %{version}-%{release} python2-PyQt5-base%{?_isa} = %{version}-%{release}
-Obsoletes:      python-qt5 < 5.5.1-10
-%{?python_provide:%python_provide python2-qt5-base}
-
-%description -n python2-qt5-base
-Python v2 bindings for Qt5 base.
-
-%package -n python2-qt5-devel
-Summary:        Development files for python-qt5
-Requires:       python2-qt5%{?_isa} = %{version}-%{release}  python2-sip-devel
-Provides:       PyQt5-devel = %{version}-%{release} python2-PyQt5-devel = %{version}-%{release}
-%{?python_provide:%python_provide python2-qt5-devel}
-
-%description -n python2-qt5-devel
-Development files for python-qt5.
 
 %package rpm-macros
 Summary:        RPM macros in python-qt5
-Conflicts:      python-qt5 < 5.6 python3-qt5 < 5.6
+Conflicts:      python3-qt5 < 5.6
 BuildArch:      noarch
 %description rpm-macros
 RPM macros in python-qt5.
@@ -130,18 +95,9 @@ BuildArch:      noarch
 Documentation for python-qt5.
 
 %if 0%{?webengine}
-%package -n python2-qt5-webengine
-Summary:        Python v2 bindings for Qt5 WebEngine
-BuildRequires:  qt5-qtwebengine-devel
-Requires:       python2-qt5%{?_isa} = %{version}-%{release}
-Obsoletes:      python-qt5 < 5.5.1-10
-%{?python_provide:%python_provide python2-qt5-webengine}
-
-%description -n python2-qt5-webengine
-Python v2 bindings for Qt5 WebEngine.
-
 %package -n python%{python3_pkgversion}-qt5-webengine
 Summary:        Python v3 bindings for Qt5 WebEngine
+BuildRequires:  qt5-qtwebengine-devel
 Requires:       python%{python3_pkgversion}-qt5%{?_isa} = %{version}-%{release}
 Obsoletes:      python3-webengine < 5.5.1-13 python3-qt5 < 5.5.1-10
 %{?python_provide:%python_provide python%{python3_pkgversion}-qt5-webengine}
@@ -150,18 +106,9 @@ Obsoletes:      python3-webengine < 5.5.1-13 python3-qt5 < 5.5.1-10
 Python v3 bindings for Qt5 WebEngine.
 %endif
 
-%package -n python2-qt5-webkit
-Summary:        Python v2 bindings for Qt5 Webkit
-BuildRequires:  qt5-qtwebkit-devel qt5-qtwebkit-devel
-Requires:       python2-qt5%{?_isa} = %{version}-%{release}
-Obsoletes:      python3-webkit < 5.5.1-12 python-qt5 < 5.5.1-10
-%{?python_provide:%python_provide python2-qt5-webkit}
-
-%description -n python2-qt5-webkit
-Python v2 bindings for Qt5 Webkit.
-
 %package -n python%{python3_pkgversion}-qt5-webkit
 Summary:        Python v3 bindings for Qt5 Webkit
+BuildRequires:  qt5-qtwebkit-devel qt5-qtwebkit-devel
 Requires:       python%{python3_pkgversion}-qt5%{?_isa} = %{version}-%{release}
 Obsoletes:      python3-qt5 < 5.5.1-10
 %{?python_provide:%python_provide python%{python3_pkgversion}-qt5-webkit}
@@ -174,16 +121,6 @@ Python v3 bindings for Qt5 Webkit.
 
 %build
 export PATH="%{_qt5_bindir}:$PATH"
-
-mkdir %{_target_platform}
-cp -a * %{_target_platform}/ ||:
-pushd %{_target_platform}
-%{__python2} ./configure.py \
-  --assume-shared --confirm-license --no-dist-info --qmake=%{_qt5_qmake} --qsci-api \
-  --qsci-api-destdir=%{_qt5_datadir}/qsci --verbose QMAKE_CFLAGS_RELEASE="%{optflags}" \
-  QMAKE_CXXFLAGS_RELEASE="%{optflags}" QMAKE_LFLAGS_RELEASE="%{?__global_ldflags}"
-%make_build
-popd
 
 mkdir %{_target_platform}-python3
 cp -a * %{_target_platform}-python3/ ||:
@@ -205,15 +142,7 @@ cp -alf .%{py3_sipdir} .%{_datadir}/python3-sip/PyQt5
 for i in .%{py3_site_qt5}/*.so .%{python3_dbus_dir}/pyqt5.so ; do
     test -x $i  || chmod a+rx $i
 done
-popd
 
-%make_install INSTALL_ROOT=%{buildroot} -C %{_target_platform}
-pushd %{buildroot}
-for i in .%{py2_site_qt5}/*.so .%{python2_dbus_dir}/pyqt5.so ; do
-    test -x $i || chmod a+rx $i
-done
-
-rm -rfv .%{py2_site_qt5}/uic/port_v3/
 rm -rfv .%{py3_site_qt5}/uic/port_v2/
 
 install -p -m644 -D %{SOURCE1} .%{rpm_macros_dir}/macros.pyqt5
@@ -230,85 +159,20 @@ install -p -m755 -D %{SOURCE3} .%{_bindir}/pyrcc5
 install -p -m755 -D %{SOURCE4} .%{_bindir}/pyuic5
 sed -i \
   -e "s|@PYTHON3@|%{__python3}|g" \
-  -e "s|@PYTHON2@|%{__python2}|g" \
   .%{_bindir}/{pyrcc5,pylupdate5,pyuic5}
 popd
-
-%files -n python2-qt5
-%defattr(-,root,root)
-%{_bindir}/pylupdate5
-%{_bindir}/pyrcc5
-%{_bindir}/pyuic5
-%{_qt5_plugindir}/PyQt5/
-%{_qt5_plugindir}/designer/libpyqt5.so
-%{py2_site_qt5}/Enginio.so
-%{py2_site_qt5}/QtBluetooth.so
-%{py2_site_qt5}/QtDesigner.so
-%{py2_site_qt5}/QtHelp.so
-%{py2_site_qt5}/QtLocation.so
-%{py2_site_qt5}/QtMultimedia.so
-%{py2_site_qt5}/QtMultimediaWidgets.so
-%{py2_site_qt5}/QtNfc.so
-%{py2_site_qt5}/QtPositioning.so
-%{py2_site_qt5}/QtQml.so
-%{py2_site_qt5}/QtQuick.so
-%{py2_site_qt5}/QtQuickWidgets.so
-%{py2_site_qt5}/QtSensors.so
-%{py2_site_qt5}/QtSerialPort.so
-%{py2_site_qt5}/QtSvg.so
-%{py2_site_qt5}/QtWebChannel.so
-%{py2_site_qt5}/QtWebSockets.so
-%{py2_site_qt5}/QtX11Extras.so
-%{py2_site_qt5}/QtXmlPatterns.so
-%{py2_site_qt5}/uic/
-%{py2_site_qt5}/pylupdate.so
-%{py2_site_qt5}/pylupdate_main.py*
-%{py2_site_qt5}/pyrcc.so
-%{py2_site_qt5}/pyrcc_main.py*
-
-%files -n python2-qt5-base
-%defattr(-,root,root)
-%doc NEWS README
-%license LICENSE
-%{python2_dbus_dir}/pyqt5.so
-%dir %{py2_site_qt5}/
-%{py2_site_qt5}/__init__.py*
-%{py2_site_qt5}/Qt.so
-%{py2_site_qt5}/QtCore.so
-%{py2_site_qt5}/QtDBus.so
-%{py2_site_qt5}/QtGui.so
-%{py2_site_qt5}/QtNetwork.so
-%{py2_site_qt5}/QtOpenGL.so
-%{py2_site_qt5}/QtPrintSupport.so
-%{py2_site_qt5}/QtSql.so
-%{py2_site_qt5}/QtTest.so
-%{py2_site_qt5}/QtWidgets.so
-%{py2_site_qt5}/QtXml.so
-%{py2_site_qt5}/_QOpenGLFunctions_*.so
-
-%if 0%{?webengine}
-%files -n python2-qt5-webengine
-%defattr(-,root,root)
-%{py2_site_qt5}/QtWebEngine*
-%endif
-
-%files -n python2-qt5-webkit
-%defattr(-,root,root)
-%{py2_site_qt5}/QtWebKit*
 
 %files rpm-macros
 %defattr(-,root,root)
 %{rpm_macros_dir}/macros.pyqt5
-
-%files -n python2-qt5-devel
-%defattr(-,root,root)
-%{_datadir}/sip/PyQt5/
 
 %files -n python%{python3_pkgversion}-qt5
 %defattr(-,root,root)
 %{_bindir}/pylupdate5
 %{_bindir}/pyrcc5
 %{_bindir}/pyuic5
+%{_qt5_plugindir}/PyQt5
+%{_qt5_plugindir}/designer/libpyqt5.so
 %{py3_site_qt5}/Enginio.*
 %{py3_site_qt5}/QtBluetooth.*
 %{py3_site_qt5}/QtDesigner.*
@@ -374,12 +238,11 @@ popd
 %files help
 %defattr(-,root,root)
 %doc examples/
-%doc %{_qt5_datadir}/qsci/api/python/PyQt5.api
-%dir %{_qt5_datadir}/qsci/
-%dir %{_qt5_datadir}/qsci/api/
-%dir %{_qt5_datadir}/qsci/api/python/
 
 %changelog
+* Tue Oct 27 2020 wangxiao <wangxiao65@huawei.com> - 5.11.2-8
+- drop python2 packages
+
 * Tue Sep 15 2020 Ge Wang <wangge20@huawei.com> - 5.11.2-7
 - Modify Source0 Url
 
