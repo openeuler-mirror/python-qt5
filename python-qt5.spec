@@ -126,7 +126,8 @@ mkdir %{_target_platform}-python3
 cp -a * %{_target_platform}-python3/ ||:
 pushd %{_target_platform}-python3
 %{__python3} ./configure.py \
-  --assume-shared --confirm-license --no-dist-info --qmake=%{_qt5_qmake} --no-qsci-api \
+  --assume-shared --confirm-license --no-dist-info --qmake=%{_qt5_qmake} \
+  --qsci-api --qsci-api-destdir=%{_qt5_datadir}/qsci \
   %{?py3_sipdir:--sipdir=%{py3_sipdir}} --verbose QMAKE_CFLAGS_RELEASE="%{optflags}" \
   QMAKE_CXXFLAGS_RELEASE="%{optflags}" QMAKE_LFLAGS_RELEASE="%{?__global_ldflags}"
 %make_build
@@ -238,6 +239,10 @@ popd
 %files help
 %defattr(-,root,root)
 %doc examples/
+%dir %{_qt5_datadir}/qsci/
+%dir %{_qt5_datadir}/qsci/api/
+%dir %{_qt5_datadir}/qsci/api/python/
+%doc %{_qt5_datadir}/qsci/api/python/PyQt5.api
 
 %changelog
 * Tue Oct 27 2020 wangxiao <wangxiao65@huawei.com> - 5.11.2-8
