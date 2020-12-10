@@ -1,6 +1,6 @@
 %global python3_dbus_dir %(%{__python3} -c "import dbus.mainloop; print(dbus.mainloop.__path__[0])" 2>/dev/null || echo "%{python3_sitearch}/dbus/mainloop")
 %ifarch %{?qt5_qtwebengine_arches}%{?!qt5_qtwebengine_arches:%{ix86} x86_64 %{arm} aarch64 mips mipsel mips64el}
-%global webengine 1
+%global webengine 0
 %endif
 %global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 %global py3_sipdir %{_datadir}/sip/PyQt5
@@ -9,7 +9,7 @@
 
 Name:           python-qt5
 Version:        5.11.2
-Release:        8
+Release:        9
 Summary:        PyQt5 is a set of Python bindings for Qt5
 License:        GPLv3
 Url:            http://www.riverbankcomputing.com/software/pyqt/
@@ -245,6 +245,9 @@ popd
 %doc %{_qt5_datadir}/qsci/api/python/PyQt5.api
 
 %changelog
+* Thu Dec 10 2020 huanghaitao <huanghaitao8@huawei.com> - 5.11.2-9
+- disable webengine to drop python2
+
 * Tue Oct 27 2020 wangxiao <wangxiao65@huawei.com> - 5.11.2-8
 - drop python2 packages
 
