@@ -8,8 +8,8 @@
 %global py3_site_qt5 %{python3_sitearch}/PyQt5
 
 Name:           python-qt5
-Version:        5.11.2
-Release:        10
+Version:        5.15.6
+Release:        1
 Summary:        PyQt5 is a set of Python bindings for Qt5
 License:        GPLv3
 Url:            http://www.riverbankcomputing.com/software/pyqt/
@@ -17,15 +17,14 @@ Url:            http://www.riverbankcomputing.com/software/pyqt/
 %if 0%{?snap:1}
 Source0:        http://www.riverbankcomputing.com/static/Downloads/PyQt5/PyQt5_gpl-%{version}%{?snap:.%{snap}}.tar.gz
 %else
-Source0:        https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-%{version}/PyQt5_gpl-%{version}.tar.gz/download?use_mirror=netactuate#/PyQt5_gpl-%{version}.tar.gz
+Source0:        https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-%{version}/PyQt5_gpl-%{version}.tar.gz/download?use_mirror=netactuate#/PyQt5-%{version}.tar.gz
 %endif
 Source1:        macros.pyqt5
 Source2:        pylupdate5.sh
 Source3:        pyrcc5.sh
 Source4:        pyuic5.sh
 
-Patch0:         PyQt5-Timeline.patch
-Patch1:         PyQt5_gpl-5.11.2-sip_check.patch
+Patch0:         fix-qcborcommon.patch
 
 BuildRequires:  chrpath findutils dbus-devel dbus-python-devel phonon-qt5-devel qt5-qttools-devel
 BuildRequires:  qt5-qtbase-devel >= 5.5 qt5-qtenginio-devel qt5-qtconnectivity-devel  
@@ -117,7 +116,7 @@ Obsoletes:      python3-qt5 < 5.5.1-10
 Python v3 bindings for Qt5 Webkit.
 
 %prep
-%autosetup -n PyQt5_gpl-%{version}%{?snap:.%{snap}} -p1
+%autosetup -n PyQt5-%{version}%{?snap:.%{snap}} -p1
 
 %build
 export PATH="%{_qt5_bindir}:$PATH"
@@ -129,7 +128,8 @@ pushd %{_target_platform}-python3
   --assume-shared --confirm-license --no-dist-info --qmake=%{_qt5_qmake} \
   --qsci-api --qsci-api-destdir=%{_qt5_datadir}/qsci \
   %{?py3_sipdir:--sipdir=%{py3_sipdir}} --verbose QMAKE_CFLAGS_RELEASE="%{optflags}" \
-  QMAKE_CXXFLAGS_RELEASE="%{optflags}" QMAKE_LFLAGS_RELEASE="%{?__global_ldflags}"
+  QMAKE_CXXFLAGS_RELEASE="%{optflags} `pkg-config --cflags dbus-python`"\
+  QMAKE_LFLAGS_RELEASE="%{?__global_ldflags}"
 %make_build
 popd
 
@@ -245,6 +245,9 @@ popd
 %doc %{_qt5_datadir}/qsci/api/python/PyQt5.api
 
 %changelog
+* Tue Mar 08 2022 wangkai <wangkai385@huawei.com> - 5.15.6-1
+- Update to Pyqt5 5.15.6
+
 * Tue Jan 11 2022 xu_ping <xuping33@huawei.com> - 5.11.2-10
 - Fix compilation failures using pulseaudio-libs-devel instead of pulseaudio-devel
 
