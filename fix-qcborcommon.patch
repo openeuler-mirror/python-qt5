@@ -1,0 +1,26 @@
+From f5c41c5d50608eb65c271e51ed6dfdcd885ead55 Mon Sep 17 00:00:00 2001
+From: wk333 <13474090681@163.com>
+Date: Mon, 7 Mar 2022 18:46:16 +0800
+Subject: [PATCH 1/1] test
+
+---
+ sip/QtCore/qcborcommon.sip | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sip/QtCore/qcborcommon.sip b/sip/QtCore/qcborcommon.sip
+index 057c6c1..318e61a 100644
+--- a/sip/QtCore/qcborcommon.sip
++++ b/sip/QtCore/qcborcommon.sip
+@@ -30,8 +30,8 @@
+ 
+ enum class QCborSimpleType
+ {
+-    False /PyName=False_/,
+-    True /PyName=True_/,
++    False_QCb /PyName=False_/,
++    True_QCb /PyName=True_/,
+     Null,
+     Undefined,
+ };
+-- 
+2.27.0
