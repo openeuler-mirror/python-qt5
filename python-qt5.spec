@@ -13,12 +13,7 @@ Release:        1
 Summary:        PyQt5 is a set of Python bindings for Qt5
 License:        GPLv3
 Url:            http://www.riverbankcomputing.com/software/pyqt/
-
-%if 0%{?snap:1}
-Source0:        http://www.riverbankcomputing.com/static/Downloads/PyQt5/PyQt5_gpl-%{version}%{?snap:.%{snap}}.tar.gz
-%else
-Source0:        https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-%{version}/PyQt5_gpl-%{version}.tar.gz/download?use_mirror=netactuate#/PyQt5-%{version}.tar.gz
-%endif
+Source0:        https://pypi.python.org/packages/source/P/PyQt5/PyQt5-%{version}.tar.gz
 Source1:        macros.pyqt5
 Source2:        pylupdate5.sh
 Source3:        pyrcc5.sh
@@ -116,7 +111,7 @@ Obsoletes:      python3-qt5 < 5.5.1-10
 Python v3 bindings for Qt5 Webkit.
 
 %prep
-%autosetup -n PyQt5-%{version}%{?snap:.%{snap}} -p1
+%autosetup -n PyQt5-%{version} -p1
 
 %build
 export PATH="%{_qt5_bindir}:$PATH"
