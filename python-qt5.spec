@@ -9,7 +9,7 @@
 
 Name:           python-qt5
 Version:        5.11.2
-Release:        9
+Release:        10
 Summary:        PyQt5 is a set of Python bindings for Qt5
 License:        GPLv3
 Url:            http://www.riverbankcomputing.com/software/pyqt/
@@ -32,7 +32,7 @@ BuildRequires:  qt5-qtbase-devel >= 5.5 qt5-qtenginio-devel qt5-qtconnectivity-d
 BuildRequires:  qt5-qtlocation-devel qt5-qtmultimedia-devel qt5-qtdeclarative-devel
 BuildRequires:  qt5-qtsensors-devel qt5-qtserialport-devel qt5-qtx11extras-devel
 BuildRequires:  qt5-qtxmlpatterns-devel qt5-qtwebchannel-devel qt5-qtwebsockets-devel 
-BuildRequires:  pulseaudio-devel dbus-python qt5-qtsvg-devel qt5-qtscript-devel
+BuildRequires:  pulseaudio-libs-devel dbus-python qt5-qtsvg-devel qt5-qtscript-devel
 BuildRequires:  python%{python3_pkgversion}-devel python%{python3_pkgversion} 
 BuildRequires:  python%{python3_pkgversion}-enum34 python%{python3_pkgversion}-pyqt5-sip >= 4.19.12
 BuildRequires:  python%{python3_pkgversion}-dbus python%{python3_pkgversion}-sip-devel >= 4.19.12
@@ -245,6 +245,9 @@ popd
 %doc %{_qt5_datadir}/qsci/api/python/PyQt5.api
 
 %changelog
+* Tue Jan 11 2022 xu_ping <xuping33@huawei.com> - 5.11.2-10
+- Fix compilation failures using pulseaudio-libs-devel instead of pulseaudio-devel
+
 * Thu Dec 10 2020 huanghaitao <huanghaitao8@huawei.com> - 5.11.2-9
 - disable webengine to drop python2
 
