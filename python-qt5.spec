@@ -1,5 +1,5 @@
 %global python3_dbus_dir %(%{__python3} -c "import dbus.mainloop; print(dbus.mainloop.__path__[0])" 2>/dev/null || echo "%{python3_sitearch}/dbus/mainloop")
-%ifarch %{?qt5_qtwebengine_arches}%{?!qt5_qtwebengine_arches:%{ix86} x86_64 %{arm} aarch64 mips mipsel mips64el}
+%ifarch %{?qt5_qtwebengine_arches}%{?!qt5_qtwebengine_arches:%{ix86} x86_64 %{arm} aarch64 mips mipsel mips64el riscv64}
 %global webengine 0
 %endif
 %global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
@@ -9,7 +9,7 @@
 
 Name:           python-qt5
 Version:        5.15.6
-Release:        1
+Release:        2
 Summary:        PyQt5 is a set of Python bindings for Qt5
 License:        GPLv3
 Url:            http://www.riverbankcomputing.com/software/pyqt/
@@ -125,6 +125,10 @@ pushd %{_target_platform}-python3
   %{?py3_sipdir:--sipdir=%{py3_sipdir}} --verbose QMAKE_CFLAGS_RELEASE="%{optflags}" \
   QMAKE_CXXFLAGS_RELEASE="%{optflags} `pkg-config --cflags dbus-python`"\
   QMAKE_LFLAGS_RELEASE="%{?__global_ldflags}"
+%ifarch riscv64
+export C_INCLUDE_PATH=$C_INCLUDE_PATH:%{_includedir}/python%{python3_version}
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:%{_includedir}/python%{python3_version}
+%endif
 %make_build
 popd
 
@@ -240,6 +244,9 @@ popd
 %doc %{_qt5_datadir}/qsci/api/python/PyQt5.api
 
 %changelog
+* Sun Apr 17 2022 Jingwiw <ixoote@gmail.com> - 5.15.6-2
+- Fix the link error of sip.h in oerv
+
 * Tue Mar 08 2022 wangkai <wangkai385@huawei.com> - 5.15.6-1
 - Update to Pyqt5 5.15.6
 
